@@ -1,5 +1,6 @@
 # voiceToText
 mp3 to srt
+
 ## 環境安裝
 * 安裝 anaconda
 	* [下載](https://www.anaconda.com/download/success)
@@ -42,3 +43,6 @@ mp3 to srt
 python voice_to_text_whisper.py voice.mp3
 ```
 * 輸出字幕檔到到 output/{guid} 的資料夾中
+
+## 下載 youtube mp3
+* 看 youtube_tool 中的 README
