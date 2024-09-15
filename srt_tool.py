@@ -3,7 +3,6 @@ import srt
 import os
 import zhconv
 
-
 # 將文字轉換為 SRT 字幕
 def write_srt(transcription, output_srt):
     def format_timestamp(seconds):
@@ -23,10 +22,10 @@ def write_srt(transcription, output_srt):
             text = segment["text"].strip()
             srt_file.write(f"{i + 1}\n{start} --> {end}\n{text}\n\n")
 
-
 # 把 SRT 字幕黨合併，並調整時間和轉換簡中成繁中
 def combine_srt(dir_path, file_name, max_file, every_part_time_len):
     i = 1
+    index = 1
     while i <= max_file:
         part_file_name = os.path.join(dir_path, file_name + "_part" + str(i) + ".srt")
         if not os.path.exists(part_file_name):
@@ -44,6 +43,8 @@ def combine_srt(dir_path, file_name, max_file, every_part_time_len):
         for sub in subs:
             sub.start = sub.start + add_hour
             sub.end = sub.end + add_hour
+            sub.index = index
+            index += 1
             # 簡中轉繁中
             sub.content = zhconv.convert(sub.content, "zh-tw")
             # print(f"Start: {sub.start}, End: {sub.end}, Text: {sub.content}")
@@ -52,7 +53,7 @@ def combine_srt(dir_path, file_name, max_file, every_part_time_len):
         with open(
             os.path.join(dir_path, file_name + ".srt"), "a", encoding="utf-8"
         ) as f:
-            f.write(srt.compose(subs))
+            f.write(srt.compose(subs, reindex = False))
         # 移除轉換完成的字幕檔
         os.remove(part_file_name)
         i += 1
@@ -61,9 +62,10 @@ def combine_srt(dir_path, file_name, max_file, every_part_time_len):
 
 def main():
     combine_srt(
-        "srt_946aa38a-4509-11ef-887e-0c9d92620f18",
-        "20210414_棉花糖雜談裡面到底是什麼鬼",
-        4,
+        "output\\test",
+        "123",
+        3,
+        10
     )
 
 
