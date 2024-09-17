@@ -66,8 +66,9 @@ def main():
     # file_name_list = ["chilla_part1.mp3", "chilla_part2.mp3"]
     print(f"切割檔案完成 {datetime.now()}")
     print(f"檔案數量 = {len(file_name_list)}")
-    # 把切割檔案轉換成 SRT 字幕檔
-    generate_srt(input_file_name, file_name_list)
+    if len(file_name_list) > 0:
+        # 把切割檔案轉換成 SRT 字幕檔
+        generate_srt(input_file_name, file_name_list)
     print(f"完成時間 {datetime.now()}")
 
 
