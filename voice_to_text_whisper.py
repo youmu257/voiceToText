@@ -8,15 +8,18 @@ import os
 import uuid
 import shutil
 
-# 字幕資料夾
-dir_path = os.path.join("output", str(uuid.uuid1()))
 # 幾分鐘切割一個音訊檔案
 every_part_time_len = 10
 device = "cuda"
 # 模型，包含 tiny、base、small、medium、large
 mode = "medium"
 
-def generate_srt(input_file_name, file_name_list):
+def generate_srt(input_file_name, file_name_list, new_srt_name = ''):
+    # 字幕資料夾
+    dir_path = os.path.join("output", str(uuid.uuid1()))
+    # 檢查資料夾是否存在，如果不存在則創建它
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
     destination_path = os.path.dirname(input_file_name)
     input_file_name = os.path.basename(input_file_name)
     # Cuda allows for the GPU to be used which is more optimized than the cpu
@@ -44,33 +47,36 @@ def generate_srt(input_file_name, file_name_list):
     )
     # 移動字幕檔案
     combine_srt_path = os.path.join(dir_path, f"{input_file_name[:-4]}.srt")
-    destination_srt_path = os.path.join(destination_path, f"{input_file_name[:-4]}.srt")
+    destination_srt_path = os.path.join(destination_path, f"{input_file_name[:-4] if new_srt_name == '' else new_srt_name[:-4]}.srt")
     print(combine_srt_path)
     print(destination_srt_path)
     shutil.move(combine_srt_path, destination_srt_path)
+    # 移除字幕資料夾
+    os.rmdir(dir_path)
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print("Usage: python script.py <input_file_name>")
         sys.exit(1)
-
-    # 檢查資料夾是否存在，如果不存在則創建它
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-
-    input_file_name = sys.argv[1]
-    print(f"開始時間 {datetime.now()}")
-    # 切割檔案
-    file_name_list = split_mp3_ffmpeg(input_file_name, every_part_time_len * 60)
-    # file_name_list = ["chilla_part1.mp3", "chilla_part2.mp3"]
-    print(f"切割檔案完成 {datetime.now()}")
-    print(f"檔案數量 = {len(file_name_list)}")
-    if len(file_name_list) > 0:
-        # 把切割檔案轉換成 SRT 字幕檔
-        generate_srt(input_file_name, file_name_list)
-    print(f"完成時間 {datetime.now()}")
-
+    for index in range(1, len(sys.argv)):
+        try:
+            input_file_name = sys.argv[index]
+            print(f"開始時間 {datetime.now()}")
+            copy_file = os.path.join(os.path.dirname(input_file_name), 'tmp.mp3')
+            shutil.copy(input_file_name, copy_file)
+            # 切割檔案
+            file_name_list = split_mp3_ffmpeg(copy_file, every_part_time_len * 60)
+            print(f"切割檔案完成 {datetime.now()}")
+            print(f"檔案數量 = {len(file_name_list)}")
+            if len(file_name_list) > 0:
+                # 把切割檔案轉換成 SRT 字幕檔
+                generate_srt(copy_file, file_name_list, input_file_name)
+            print(f"完成時間 {datetime.now()}")
+            # 移除 tmp.mp3
+            os.remove(copy_file)
+        except:
+            continue
 
 if __name__ == "__main__":
     main()
