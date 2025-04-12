@@ -14,9 +14,8 @@ def write_srt(transcription, output_srt):
         seconds = ms // 1000
         ms %= 1000
         return f"{hours:02}:{minutes:02}:{seconds:02},{ms:03}"
-
     with open(output_srt, "w", encoding="utf-8") as srt_file:
-        for i, segment in enumerate(transcription["segments"]):
+        for i, segment in enumerate(transcription):
             start = format_timestamp(segment["start"])
             end = format_timestamp(segment["end"])
             text = segment["text"].strip()

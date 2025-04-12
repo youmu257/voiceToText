@@ -165,3 +165,7 @@ cython_debug/
 
 voice/
 output/
+pretrained_models/
+models/
+uvr5/ultimatevocalremovergui/
+uvr5/models/

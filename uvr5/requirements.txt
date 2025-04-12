@@ -1,0 +1,17 @@
+huggingface_hub==0.15.1
+audioread
+librosa
+natsort
+psutil
+pyglet
+pyperclip
+julius
+omegaconf
+diffq
+six
+onnx
+onnx2pytorch
+onnxruntime
+pydub
+pytorch_lightning
+ml_collections

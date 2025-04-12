@@ -26,6 +26,9 @@
 * 執行 ```python download_youtube_channel_all_video_list.py```
 	* 會存成 CSV 檔案
 	* 包含 影片標題、上傳時間、影片網址
+* 如果出現錯誤 ```unable to download video data: HTTP Error 403: Forbidden```
+	* 嘗試更新 yt-dlp
+		* ```pip install -U yt-dlp```
 
 ## 下載 Youtube 音訊檔
 * 先安裝 yt-dlp

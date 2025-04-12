@@ -7,7 +7,7 @@ import shutil
 tmp_dir = ".\\tmp"
 if os.path.exists(tmp_dir):
     shutil.rmtree(tmp_dir, ignore_errors=True)
-os.makedirs(tmp_dir)
+os.makedirs(tmp_dir, exist_ok=True)
 
 def split_mp3(file_path, chunk_length=30 * 60):
     # 讀取 MP3 文件
@@ -65,7 +65,7 @@ def list_files_and_move(directory, destination_dir):
         source_file = os.path.join(directory, file_name)
         destination_file = os.path.join(destination_dir, file_name)
         
-        if os.path.isfile(source_file):
+        if os.path.isfile(source_file) and is_audio_file_more_than_one_second(source_file):
             # 移動檔案
             shutil.move(source_file, destination_file)
             file_name_list.append(destination_file)
@@ -73,6 +73,40 @@ def list_files_and_move(directory, destination_dir):
         else:
             print(f"跳過非檔案: {file_name}")
     return file_name_list
+
+def is_audio_file_more_than_one_second(file_path):
+    """
+    檢查音頻檔案的長度是否小於 1 秒。
+    
+    :param file_path: 音頻檔案的路徑
+    :return: 如果檔案長度小於 1 秒，則返回 True，否則返回 False
+    """
+    try:
+        # 使用 ffmpeg 查詢音檔的長度
+        result = subprocess.run(
+            ['ffmpeg', '-i', file_path], 
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE
+        )
+        output = result.stderr.decode()
+
+        # 提取 Duration 行
+        duration_line = [line for line in output.splitlines() if 'Duration' in line]
+
+        if not duration_line:
+            raise ValueError("檔案無效或無法讀取時長")
+
+        # 解析時長，格式如 00:00:10.12
+        duration_str = duration_line[0].split()[1]
+        duration_parts = duration_str.split(":")
+
+        # 將時長轉換為秒
+        total_seconds = int(duration_parts[0]) * 3600 + int(duration_parts[1]) * 60 + float(duration_parts[2].replace(",", ""))
+        # 檢查是否小於 1 秒
+        return total_seconds > 1
+    
+    except Exception as e:
+        print(f"錯誤：{e}")
+        return False
 
 def main():
     split_mp3_ffmpeg(
