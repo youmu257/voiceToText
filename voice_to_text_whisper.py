@@ -19,7 +19,7 @@ from uvr5.uvr_cli import uvr_separate
 every_part_time_len = 10
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # 模型，包含 tiny、base、small、medium、large
-mode = "medium"
+mode = "large"
 # 設定靜音閾值 (-40dBFS) & 最小靜音長度 (500ms)
 VOLUME_THRESHOLD = -40
 MIN_SILENCE_LEN = 500  # 500 毫秒
@@ -37,7 +37,7 @@ def generate_srt(input_file_name, file_name_list, new_srt_name=''):
     torch.cuda.init()
 
     # 加載 Whisper 模型
-    model = whisper.load_model("medium").to("cuda" if torch.cuda.is_available() else "cpu")
+    model = whisper.load_model(mode).to(device)
     print(f"加載模型完成 {datetime.now()}")
 
     for file_name in file_name_list:

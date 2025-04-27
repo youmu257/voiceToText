@@ -32,6 +32,7 @@
 
 ## 下載 Youtube 音訊檔
 * 先安裝 yt-dlp
+	* [下載](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#installation)
 	* 可以用指令確認是否安裝成功，其中 yt_url 是影片網址
 	``` yt-dlp --output "%(title)s.%(ext)s" --embed-thumbnail --add-metadata --extract-audio --audio-format mp3 --audio-quality 320K "yt_url"```
 * 腳本為 yt_dlp_download_mp3.py

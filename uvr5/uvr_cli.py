@@ -59,7 +59,7 @@ class ModelData():
         self.is_deverb_vocals = False
         self.deverb_vocal_opt = 'Vocals' #None #DEVERB_MAPPER[]
         self.is_denoise_model = False
-        self.is_gpu_conversion = 0
+        self.is_gpu_conversion = 1
         self.is_normalization = False
         self.is_use_opencl = False#True if is_opencl_only else root.is_use_opencl_var.get()
         self.is_primary_stem_only = True

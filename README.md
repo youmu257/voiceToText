@@ -6,6 +6,7 @@ mp3 to srt
 	* [下載](https://www.anaconda.com/download/success)
 	* 打開 Anaconda Powershell Prompt
 * 安裝 Chocolatey
+	* windows 安裝要有管理者權限
 	```
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 	```
@@ -13,24 +14,17 @@ mp3 to srt
 	```
 	choco install ffmpeg
 	```
-* 安裝 Whisper
-	```
-	pip install -U openai-whisper
-	```
-* 安裝 PyTorch
+* 安裝 Microsoft C++ Build Tools
+	* [下載](https://visualstudio.microsoft.com/zh-hant/visual-cpp-build-tools/)
+* 安裝支援 GPU 的 PyTorch
 	* https://pytorch.org/get-started/locally/
-	* 安裝完成後可以用GPU執行
 	```
-	pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+	pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu118
 	```
 * 安裝 python 套件
+	* python 版本不要高於 3.12，建議用 3.11
 	```
-	pip3 install pydub
-	pip3 install simpleaudio
-	pip3 install zhconv
-	pip3 install --no-cache-dir "numpy<2" tensorflow scipy spleeter
-	pip3 install --upgrade --force-reinstall torch
-	pip3 install numba -y
+	pip install -r requirements.txt
 	```
 * 安裝 Ultimate Vocal Remover 5.6
 	* [Ultimate Vocal Remover Github](https://github.com/Anjok07/ultimatevocalremovergui)

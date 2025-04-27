@@ -1,0 +1,10 @@
+-r uvr5/requirements.txt
+openai-whisper
+torch
+uuid
+simpleaudio
+zhconv
+numba
+srt
+tensorflow
+pyrubberband
