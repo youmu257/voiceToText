@@ -19,12 +19,6 @@ from huggingface_hub import hf_hub_download
 current_dir = os.path.dirname(os.path.abspath(__file__))
 uvr_dir = os.path.join(current_dir, 'ultimatevocalremovergui')
 
-# 設定工作目錄（如果有需要執行內部 CLI 或存取檔案）
-#os.chdir(uvr_dir)
-#os.chdir(current_dir)
-# 加入路徑，讓 Python 能找到該目錄下的模組
-#sys.path.append(uvr_dir)
-
 # 確保 module_a 和 module_a/module_b 都能被找到
 sys.path.append(current_dir)  # 讓 module_a 可以被找到
 sys.path.append(uvr_dir)
@@ -35,9 +29,8 @@ from ultimatevocalremovergui.gui_data.constants import *
 #匯入會出現錯誤 跟separate在同一層才不會出現錯誤 要想辦法解決
 from ultimatevocalremovergui.separate import SeperateMDXC, clear_gpu_cache
 
-MDX_MODELS_DIR = './models'
-#MDX_HASH_DIR = os.path.join('ultimatevocalremovergui', 'models', 'MDX_Net_Models', 'model_data')
-MDX_HASH_DIR = os.path.join('uvr5', 'ultimatevocalremovergui', 'models', 'MDX_Net_Models', 'model_data')
+MDX_MODELS_DIR = os.path.join(current_dir, 'models')
+MDX_HASH_DIR = os.path.join(current_dir, 'ultimatevocalremovergui', 'models', 'MDX_Net_Models', 'model_data')
 MDX_HASH_JSON = os.path.join(MDX_HASH_DIR, 'model_data.json')
 MDX_C_CONFIG_PATH = os.path.join(MDX_HASH_DIR, 'mdx_c_configs')
 model_hash_table = {}
@@ -384,7 +377,9 @@ def uvr_separate(filename : str, export_path = './', cpu_only = False):
     # Download the model if it's not downloaded yet
     if not os.path.exists(MDX_MODELS_DIR):
         os.makedirs(MDX_MODELS_DIR)
-    hf_hub_download(repo_id="Politrees/UVR_resources", filename="MDX23C_models/MDX23C-8KFFT-InstVoc_HQ.ckpt", local_dir=MDX_MODELS_DIR)
+    # model 不存在才下載
+    if not os.path.exists(os.path.join(MDX_MODELS_DIR, 'MDX23C_models', 'MDX23C-8KFFT-InstVoc_HQ.ckpt')):
+        hf_hub_download(repo_id="Politrees/UVR_resources", filename="MDX23C_models/MDX23C-8KFFT-InstVoc_HQ.ckpt", local_dir=MDX_MODELS_DIR)
     print('Initializing UVR...', end='')
     model = ModelData(model_name='MDX23C_models/MDX23C-8KFFT-InstVoc_HQ.ckpt')
     if cpu_only:
